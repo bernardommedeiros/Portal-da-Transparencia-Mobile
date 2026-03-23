@@ -4,7 +4,9 @@ Olá! bem-vindo(a) à avaliação técnica para integrar a equipe de desenvolvim
 
 ## Objetivo
 
-O desafio consiste em desenvolver um aplicativo mobile administrativo de **Portal da Transparência**, consumindo uma API REST já disponibilizada pela empresa. O app deve permitir que o usuário consulte gastos públicos — quais órgãos gastaram, com quais fornecedores e os comprovantes de cada despesa.
+O desafio consiste em desenvolver um aplicativo mobile administrativo de **Portal da Transparência**, consumindo uma API REST já disponibilizada pela empresa. O app deve permitir que o usuário consulte gastos públicos — quais órgãos gastaram, com quais fornecedores e os comprovantes de cada despesa. 
+
+Deve ser feito um fork desse respositório na sua conta do Github e o projeto deve ser inteiramente desenvolvido por lá. Ao finalizar, envie o link do seu repositório público para avaliação.
 
 A API está disponível em: `https://avaliacaoapi.ext.topsolutionsrn.com.br/api`
 
