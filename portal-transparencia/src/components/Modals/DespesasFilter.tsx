@@ -5,13 +5,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Search } from 'lucide-react';
 import { orgaosService } from '@/services/orgaos';
-import type { OrgaoListItem } from '@/types/orgaos.types';
+import type { OrgaoListItem } from '@/types/orgao.types'
+import type { DespesasFilterProps } from '@/types/despesa.types';
 import { fornecedoresService } from '@/services/fornecedores';
 import type { FornecedorListItem } from '@/types/fornecedores.types';
 
-interface DespesasFilterProps {
-  onFilter: (filters: { orgao_id?: string; fornecedor_id?: string; valor_min?: string; valor_max?: string }) => void;
-}
 
 export function DespesasFilter({ onFilter }: DespesasFilterProps) {
   const [orgaos, setOrgaos] = useState<OrgaoListItem[]>([])

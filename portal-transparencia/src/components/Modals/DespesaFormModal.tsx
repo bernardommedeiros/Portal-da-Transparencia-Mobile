@@ -11,19 +11,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Pencil, PlusCircle } from 'lucide-react';
 import { orgaosService } from '@/services/orgaos';
-import type { OrgaoListItem } from '@/types/orgaos.types';
+import type { OrgaoListItem } from '@/types/orgao.types'
 import { fornecedoresService } from '@/services/fornecedores';
 import type { FornecedorListItem } from '@/types/fornecedores.types';
 import { despesasService } from '@/services/despesas';
-import type { Despesa, DespesaPayload } from '@/types/despesa.types';
+import type { DespesaPayload, DespesaFormModalProps } from '@/types/despesa.types';
 import { toast } from 'sonner';
-
-interface DespesaFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-  initialData?: Despesa | null;
-}
 
 export function DespesaFormModal({ isOpen, onClose, onSuccess, initialData }: DespesaFormModalProps) {
   const isEditing = !!initialData
