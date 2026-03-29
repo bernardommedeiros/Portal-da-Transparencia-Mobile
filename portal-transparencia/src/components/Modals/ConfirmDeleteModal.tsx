@@ -9,14 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Trash2, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-
-interface ConfirmDeleteModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => Promise<void>;
-  title: string;
-  description: string;
-}
+import type { ConfirmDeleteModalProps } from '@/types/modals.types';
 
 export function ConfirmDeleteModal({
   isOpen,

@@ -5,9 +5,10 @@ import { DespesasFilter } from '../../components/Modals/DespesasFilter';
 import { DespesaCard } from '../../components/Modals/DespesaCard';
 import { DespesaFormModal } from '../../components/Modals/DespesaFormModal';
 import { ConfirmDeleteModal } from '../../components/Modals/ConfirmDeleteModal';
-import { Loader2, Plus, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, Plus, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { PaginationBar } from '@/components/ui/PaginationBar';
 
 export function Despesas() {
   const [data, setData] = useState<PaginatedResponse<Despesa> | null>(null)
@@ -76,8 +77,7 @@ export function Despesas() {
           <p className="text-sm text-gray-500 dark:text-gray-400">Listagem de gastos e registros</p>
         </div>
         
-        <Button onClick={() => { setDespesaToEdit(null)
-          setIsFormOpen(true) }}>
+        <Button onClick={() => { setDespesaToEdit(null); setIsFormOpen(true) }} className="h-10 sm:h-11 rounded-xl px-4 sm:px-6 w-full sm:w-auto">
           <Plus className="w-5 h-5 mr-2" />
           Nova Despesa
         </Button>
@@ -114,28 +114,16 @@ export function Despesas() {
             )}
           </div>
 
-          {data && data.last_page > 1 && (
-            <div className="flex items-center justify-between pt-4 pb-4">
-              <span className="text-sm text-gray-500">
-                Página {data.current_page} de {data.last_page} ({data.total} itens)
-              </span>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" size="sm" 
-                  disabled={data.current_page === 1}
-                  onClick={() => setFilters(prev => ({ ...prev, page: data.current_page - 1 }))}
-                >
-                  <ChevronLeft className="w-4 h-4 mr-1" /> Anterior
-                </Button>
-                <Button 
-                  variant="outline" size="sm"
-                  disabled={data.current_page === data.last_page}
-                  onClick={() => setFilters(prev => ({ ...prev, page: data.current_page + 1 }))}
-                >
-                  Próxima <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
+          {data && (
+            <PaginationBar
+              currentPage={data.current_page}
+              lastPage={data.last_page}
+              total={data.total}
+              from={data.from}
+              to={data.to}
+              onPrev={() => setFilters(prev => ({ ...prev, page: data.current_page - 1 }))}
+              onNext={() => setFilters(prev => ({ ...prev, page: data.current_page + 1 }))}
+            />
           )}
         </>
       )}

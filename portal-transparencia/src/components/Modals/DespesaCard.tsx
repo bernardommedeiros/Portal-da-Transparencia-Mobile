@@ -1,14 +1,8 @@
-import type { Despesa } from '@/types/despesa.types';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2, Building2, User } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
-
-interface DespesaCardProps {
-  despesa: Despesa;
-  onEdit: () => void;
-  onDelete: () => void;
-}
+import type { DespesaCardProps } from '@/types/despesa.types';
 
 export function DespesaCard({ despesa, onEdit, onDelete }: DespesaCardProps) {
   const dateStr = new Date(despesa.created_at).toLocaleDateString('pt-BR')

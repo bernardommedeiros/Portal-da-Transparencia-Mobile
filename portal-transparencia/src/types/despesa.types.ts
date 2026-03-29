@@ -58,3 +58,20 @@ export interface DespesaPayload {
   descricao: string;
   valor: string;
 }
+
+export interface DespesaCardProps {
+  despesa: Despesa;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export interface DespesaFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+  initialData?: Despesa | null;
+}
+
+export interface DespesasFilterProps {
+  onFilter: (filters: { orgao_id?: string; fornecedor_id?: string; valor_min?: string; valor_max?: string }) => void;
+}
