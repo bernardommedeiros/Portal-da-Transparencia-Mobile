@@ -1,5 +1,8 @@
-export interface FornecedorListItem {
-  id: number;
-  name: string;
-  document: string;
-}
+export type {
+  Fornecedor,
+  FornecedorListItem,
+  FornecedorPayload,
+  FornecedorFilters,
+  FornecedorCardProps,
+  FornecedorFormModalProps,
+} from './fornecedor.types'
