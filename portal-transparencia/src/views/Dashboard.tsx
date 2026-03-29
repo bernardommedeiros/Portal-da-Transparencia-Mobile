@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { dashboardService } from '@/services/dashboard';
 import type { DataItem, ViewMode, GastoOrgao, GastoFornecedor } from '@/types/dashboard.types';
-import { Card } from '@/components/ui/Card';
+import { Card, CardHeader, CardTitle, CardAction, CardContent } from '@/components/ui/card';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { ViewToggle } from '@/components/Dashboard/ViewToggle';
 import { ChartRenderer } from '@/components/Dashboard/ChartRenderer';
@@ -91,7 +91,7 @@ export function Dashboard() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -105,16 +105,28 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-        <Card title="Gastos por Órgão" action={<ViewToggle active={orgaoView} onChange={setOrgaoView} />} className="flex flex-col h-[420px]">
-          <div className="h-full w-full">
+        <Card className="flex flex-col h-[420px]">
+          <CardHeader>
+            <CardTitle>Gastos por Órgão</CardTitle>
+            <CardAction>
+              <ViewToggle active={orgaoView} onChange={setOrgaoView} />
+            </CardAction>
+          </CardHeader>
+          <CardContent className="flex-1 min-h-0 w-full">
             <ChartRenderer data={state.gastosOrgao} viewMode={orgaoView} />
-          </div>
+          </CardContent>
         </Card>
 
-        <Card title="Gastos por Fornecedor" action={<ViewToggle active={fornView} onChange={setFornView} />} className="flex flex-col h-[420px]">
-          <div className="h-full w-full">
+        <Card className="flex flex-col h-[420px]">
+          <CardHeader>
+            <CardTitle>Gastos por Fornecedor</CardTitle>
+            <CardAction>
+              <ViewToggle active={fornView} onChange={setFornView} />
+            </CardAction>
+          </CardHeader>
+          <CardContent className="flex-1 min-h-0 w-full">
             <ChartRenderer data={state.gastosFornecedor} viewMode={fornView} />
-          </div>
+          </CardContent>
         </Card>
       </div>
 

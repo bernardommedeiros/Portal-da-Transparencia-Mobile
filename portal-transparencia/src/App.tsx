@@ -1,19 +1,20 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ThemeToggle from '@/components/ThemeToggle';
+import { Layout } from '@/components/layout/Layout';
 import { Dashboard } from '@/views/Dashboard';
+import { Despesas } from '@/views/Despesas/Despesas';
+import { Toaster } from '@/components/ui/sonner';
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        <ThemeToggle />
-        <main className="w-full min-h-screen flex flex-col">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </main>
-      </div>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/despesas" element={<Despesas />} />
+        </Route>
+      </Routes>
+      <Toaster />
     </BrowserRouter>
   )
 }
