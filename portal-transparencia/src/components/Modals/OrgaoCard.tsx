@@ -20,7 +20,7 @@ export function OrgaoCard({ orgao, onEdit, onDelete }: OrgaoCardProps) {
           <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 leading-tight">
             {orgao.name}
           </h3>
-          <p className="text-[10px] sm:text-xs text-blue-600 dark:text-blue-300 font-semibold mt-1 sm:mt-1.5 opacity-90">
+          <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1 sm:mt-1.5 opacity-90">
             REGISTRO: #{orgao.id.toString().padStart(4, '0')}
           </p>
         </div>
