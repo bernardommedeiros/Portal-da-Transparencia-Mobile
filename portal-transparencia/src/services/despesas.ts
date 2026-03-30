@@ -2,6 +2,11 @@ import { api } from './api';
 import type { Despesa, PaginatedResponse, DespesaFilters, DespesaPayload } from '@/types/despesa.types';
 
 export const despesasService = {
+  getAll: async () => {
+    const { data } = await api.get<Despesa[]>('/despesas')
+    return data
+  },
+
   getAllPaginated: async (filters?: DespesaFilters) => {
     const params = new URLSearchParams()
     

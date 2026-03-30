@@ -1,23 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { despesasService } from '@/services/despesas';
-import type { Despesa, PaginatedResponse, DespesaFilters } from '@/types/despesa.types';
-import { DespesasFilter } from '../../components/Modals/DespesasFilter';
-import { DespesaCard } from '../../components/Modals/DespesaCard';
-import { DespesaFormModal } from '../../components/Modals/DespesaFormModal';
-import { DespesaDetailModal } from '../../components/Modals/DespesaDetailModal';
-import { ConfirmDeleteModal } from '../../components/Modals/ConfirmDeleteModal';
+import type { Despesa, DespesaFilters } from '@/types/despesa.types';
+import { DespesasFilter } from '@/components/Modals/DespesasFilter';
+import { DespesaCard } from '@/components/Modals/DespesaCard';
+import { DespesaFormModal } from '@/components/Modals/DespesaFormModal';
+import { DespesaDetailModal } from '@/components/Modals/DespesaDetailModal';
+import { ConfirmDeleteModal } from '@/components/Modals/ConfirmDeleteModal';
 import { Loader2, Plus, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { PaginationBar } from '@/components/ui/PaginationBar';
+import { SortSelector } from '@/components/ui/SortSelector';
+
+const DESPESA_SORT_OPTIONS = [
+  { label: 'Maior valor', value: 'valor_desc' },
+  { label: 'Menor valor', value: 'valor_asc' },
+  { label: 'Mais recentes', value: 'date_desc' },
+  { label: 'Mais antigos', value: 'date_asc' },
+  { label: 'Descrição A-Z', value: 'desc_asc' },
+  { label: 'Descrição Z-A', value: 'desc_desc' }
+]
 
 export function Despesas() {
-  const [data, setData] = useState<PaginatedResponse<Despesa> | null>(null)
+  const [allDespesas, setAllDespesas] = useState<Despesa[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeFilters, setActiveFilters] = useState<Omit<DespesaFilters, 'page' | 'per_page'>>({})
   
-  const [filters, setFilters] = useState<DespesaFilters>({ page: 1, per_page: 15 })
-  
+
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [despesaToEdit, setDespesaToEdit] = useState<Despesa | null>(null)
   
@@ -26,27 +36,71 @@ export function Despesas() {
 
   const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [despesaSelected, setDespesaSelected] = useState<Despesa | null>(null)
+  const [sortBy, setSortBy] = useState('date_desc')
+  const [localPage, setLocalPage] = useState(1)
 
-  const loadDespesas = useCallback(async () => {
+  const loadAll = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const res = await despesasService.getAllPaginated(filters)
-      setData(res)
+      const res = await despesasService.getAll()
+      setAllDespesas(res)
     } catch (err: unknown) {
       console.error(err)
       setError('Falha ao carregar as despesas.')
     } finally {
       setLoading(false)
     }
-  }, [filters])
+  }, [])
 
   useEffect(() => {
-    loadDespesas()
-  }, [loadDespesas])
+    loadAll()
+  }, [loadAll])
+
+  const reload = () => loadAll()
+
+  const PER_PAGE = 15
+
+  const sortedDespesas = useMemo(() => {
+    let items = [...allDespesas]
+
+    if (activeFilters.orgao_id) {
+      items = items.filter(d => d.orgao_id.toString() === activeFilters.orgao_id?.toString())
+    }
+    if (activeFilters.fornecedor_id) {
+      items = items.filter(d => d.fornecedor_id.toString() === activeFilters.fornecedor_id?.toString())
+    }
+    if (activeFilters.valor_min) {
+      items = items.filter(d => parseFloat(d.valor) >= parseFloat(activeFilters.valor_min!))
+    }
+    if (activeFilters.valor_max) {
+      items = items.filter(d => parseFloat(d.valor) <= parseFloat(activeFilters.valor_max!))
+    }
+
+    switch (sortBy) {
+      case 'valor_desc': return items.sort((a, b) => parseFloat(b.valor) - parseFloat(a.valor))
+      case 'valor_asc': return items.sort((a, b) => parseFloat(a.valor) - parseFloat(b.valor))
+      case 'date_desc': return items.sort((a, b) => b.created_at.localeCompare(a.created_at))
+      case 'date_asc': return items.sort((a, b) => a.created_at.localeCompare(b.created_at))
+      case 'desc_asc': return items.sort((a, b) => a.descricao.trim().toLowerCase().localeCompare(b.descricao.trim().toLowerCase(), 'pt-BR', { numeric: true }))
+      case 'desc_desc': return items.sort((a, b) => b.descricao.trim().toLowerCase().localeCompare(a.descricao.trim().toLowerCase(), 'pt-BR', { numeric: true }))
+      default: return items
+    }
+  }, [allDespesas, sortBy, activeFilters])
+
+  const totalPages = Math.ceil(sortedDespesas.length / PER_PAGE)
+  const from = (localPage - 1) * PER_PAGE
+  const to = Math.min(from + PER_PAGE, sortedDespesas.length)
+  const paginatedDespesas = sortedDespesas.slice(from, to)
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value)
+    setLocalPage(1)
+  }
 
   const handleApplyFilter = (newFilters: Omit<DespesaFilters, 'page' | 'per_page'>) => {
-    setFilters({ ...newFilters, page: 1, per_page: 15 })
+    setActiveFilters(newFilters)
+    setLocalPage(1)
   }
 
   const handleEdit = (despesa: Despesa) => {
@@ -69,7 +123,7 @@ export function Despesas() {
     try {
       await despesasService.delete(despesaToDelete.id)
       toast.success('Despesa excluída com sucesso!')
-      loadDespesas()
+      reload()
     } catch {
       toast.error('Erro ao excluir a despesa.')
     } finally {
@@ -94,6 +148,10 @@ export function Despesas() {
 
       <DespesasFilter onFilter={handleApplyFilter} />
 
+      <div className="flex items-center justify-end">
+        <SortSelector options={DESPESA_SORT_OPTIONS} value={sortBy} onChange={handleSortChange} />
+      </div>
+
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-xl flex items-start gap-3">
           <AlertCircle className="h-5 w-5 shrink-0" />
@@ -101,14 +159,14 @@ export function Despesas() {
         </div>
       )}
 
-      {loading && !data ? (
+      {loading ? (
         <div className="flex justify-center p-8">
           <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
         </div>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data?.data.map(desp => (
+            {paginatedDespesas.map(desp => (
               <DespesaCard 
                 key={desp.id} 
                 despesa={desp} 
@@ -117,22 +175,22 @@ export function Despesas() {
                 onViewDetail={handleViewDetail}
               />
             ))}
-            {data?.data.length === 0 && (
+            {paginatedDespesas.length === 0 && (
               <div className="col-span-full text-center py-10 text-gray-500">
                 Nenhuma despesa encontrada para os parâmetros atuais.
               </div>
             )}
           </div>
 
-          {data && (
+          {sortedDespesas.length > 0 && (
             <PaginationBar
-              currentPage={data.current_page}
-              lastPage={data.last_page}
-              total={data.total}
-              from={data.from}
-              to={data.to}
-              onPrev={() => setFilters(prev => ({ ...prev, page: data.current_page - 1 }))}
-              onNext={() => setFilters(prev => ({ ...prev, page: data.current_page + 1 }))}
+              currentPage={localPage}
+              lastPage={totalPages}
+              total={sortedDespesas.length}
+              from={from + 1}
+              to={to}
+              onPrev={() => setLocalPage(p => Math.max(1, p - 1))}
+              onNext={() => setLocalPage(p => Math.min(totalPages, p + 1))}
             />
           )}
         </>
@@ -143,7 +201,7 @@ export function Despesas() {
           isOpen={isFormOpen} 
           onClose={() => setIsFormOpen(false)} 
           initialData={despesaToEdit} 
-          onSuccess={loadDespesas} 
+          onSuccess={reload} 
         />
       )}
 
@@ -163,7 +221,7 @@ export function Despesas() {
             setDespesaSelected(null)
           }}
           despesa={despesaSelected}
-          onDeleteSuccess={loadDespesas}
+          onDeleteSuccess={reload}
         />
       )}
     </div>

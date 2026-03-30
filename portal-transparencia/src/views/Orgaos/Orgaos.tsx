@@ -10,8 +10,16 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useDebounce } from '@/hooks/useDebounce'
 import { PaginationBar } from '@/components/ui/PaginationBar'
+import { SortSelector } from '@/components/ui/SortSelector'
 
 const PER_PAGE = 15;
+
+const ORGAO_SORT_OPTIONS = [
+  { label: 'Nome A-Z', value: 'name_asc' },
+  { label: 'Nome Z-A', value: 'name_desc' },
+  { label: 'Mais recentes', value: 'date_desc' },
+  { label: 'Mais antigos', value: 'date_asc' },
+]
 
 function EmptyState({ term }: { term?: string }) {
   return (
@@ -44,6 +52,7 @@ export function Orgaos() {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [orgaoToDelete, setOrgaoToDelete] = useState<Orgao | null>(null)
+  const [sortBy, setSortBy] = useState('name_asc')
 
   // Carrega lista paginada — usada quando não há busca ativa
   const fetchPaginated = useCallback(async (currentPage: number) => {
@@ -60,7 +69,6 @@ export function Orgaos() {
     }
   }, [])
 
-  // Carrega TODOS os órgãos para filtrar localmente por nome ou ID
   const fetchAll = useCallback(async () => {
     try {
       setLoading(true)
@@ -75,7 +83,6 @@ export function Orgaos() {
     }
   }, [])
 
-  // Decide qual estratégia de carregamento usar
   useEffect(() => {
     if (debouncedSearch.trim() === '') {
       setAllOrgaos([])
@@ -86,7 +93,6 @@ export function Orgaos() {
     }
   }, [debouncedSearch, page, fetchPaginated, fetchAll])
 
-  // Filtragem local: compara nome (parcial) e ID (exato)
   const filteredOrgaos = useMemo(() => {
     if (!debouncedSearch.trim()) return []
     const term = debouncedSearch.trim().toLowerCase()
@@ -95,6 +101,17 @@ export function Orgaos() {
       o.id.toString() === term
     )
   }, [allOrgaos, debouncedSearch])
+
+  function applySorting<T extends { name: string; created_at?: string; id: number }>(items: T[]): T[] {
+    const sorted = [...items]
+    switch (sortBy) {
+      case 'name_asc': return sorted.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+      case 'name_desc': return sorted.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'))
+      case 'date_desc': return sorted.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))
+      case 'date_asc': return sorted.sort((a, b) => (a.created_at ?? '').localeCompare(b.created_at ?? ''))
+      default: return sorted
+    }
+  }
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
@@ -142,13 +159,11 @@ export function Orgaos() {
       <div className="px-3 py-4 sm:px-6 sm:py-6 md:px-8 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto space-y-3">
 
-          {/* Título */}
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Órgãos</h1>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Gerenciamento de unidades institucionais</p>
             </div>
-            {/* Botão visível só em telas maiores (sm+) ao lado do título */}
             <Button
               onClick={() => { setOrgaoToEdit(null); setIsFormOpen(true); }}
               className="hidden sm:flex h-11 rounded-xl px-6"
@@ -158,7 +173,6 @@ export function Orgaos() {
             </Button>
           </div>
 
-          {/* Busca — sempre visível, largura total no mobile */}
           <form onSubmit={handleSearch} className="relative group w-full">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <Search className="h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
@@ -171,7 +185,6 @@ export function Orgaos() {
             />
           </form>
 
-          {/* Botão visível apenas no mobile (abaixo da busca) */}
           <Button
             onClick={() => { setOrgaoToEdit(null); setIsFormOpen(true); }}
             className="sm:hidden w-full h-11 rounded-xl"
@@ -184,6 +197,9 @@ export function Orgaos() {
       </div>
 
       <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="flex items-center justify-end mb-4">
+          <SortSelector options={ORGAO_SORT_OPTIONS} value={sortBy} onChange={setSortBy} />
+        </div>
         {error && (
           <div className="mb-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-2xl flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0" />
@@ -199,11 +215,10 @@ export function Orgaos() {
         ) : (
           <div className="space-y-6">
             {debouncedSearch.trim() !== '' ? (
-              /* ── Modo busca local ── */
               <>
                 {filteredOrgaos.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                    {filteredOrgaos.map(orgao => (
+                    {applySorting(filteredOrgaos).map(orgao => (
                       <OrgaoCard
                         key={orgao.id}
                         orgao={orgao as Orgao}
@@ -220,10 +235,9 @@ export function Orgaos() {
                 </p>
               </>
             ) : (
-              /* ── Modo listagem paginada ── */
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                  {data?.data.map(orgao => (
+                  {applySorting(data?.data ?? []).map(orgao => (
                     <OrgaoCard
                       key={orgao.id}
                       orgao={orgao}

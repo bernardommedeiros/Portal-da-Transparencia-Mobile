@@ -10,8 +10,16 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useDebounce } from '@/hooks/useDebounce'
 import { PaginationBar } from '@/components/ui/PaginationBar'
+import { SortSelector } from '@/components/ui/SortSelector'
 
 const PER_PAGE = 15
+
+const FORNECEDOR_SORT_OPTIONS = [
+  { label: 'Nome A-Z', value: 'name_asc' },
+  { label: 'Nome Z-A', value: 'name_desc' },
+  { label: 'Mais recentes', value: 'date_desc' },
+  { label: 'Mais antigos', value: 'date_asc' },
+]
 
 function EmptyState({ term }: { term?: string }) {
   return (
@@ -44,6 +52,7 @@ export function Fornecedores() {
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [fornecedorToDelete, setFornecedorToDelete] = useState<Fornecedor | null>(null)
+  const [sortBy, setSortBy] = useState('name_asc')
 
   const fetchPaginated = useCallback(async (currentPage: number) => {
     try {
@@ -92,6 +101,17 @@ export function Fornecedores() {
       f.id.toString() === term
     )
   }, [allFornecedores, debouncedSearch])
+
+  function applySorting<T extends { name: string; created_at?: string; id: number }>(items: T[]): T[] {
+    const sorted = [...items]
+    switch (sortBy) {
+      case 'name_asc': return sorted.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+      case 'name_desc': return sorted.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'))
+      case 'date_desc': return sorted.sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))
+      case 'date_asc': return sorted.sort((a, b) => (a.created_at ?? '').localeCompare(b.created_at ?? ''))
+      default: return sorted
+    }
+  }
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
@@ -172,6 +192,9 @@ export function Fornecedores() {
       </div>
 
       <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
+        <div className="flex items-center justify-end mb-4">
+          <SortSelector options={FORNECEDOR_SORT_OPTIONS} value={sortBy} onChange={setSortBy} />
+        </div>
         {error && (
           <div className="mb-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-2xl flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0" />
@@ -190,7 +213,7 @@ export function Fornecedores() {
               <>
                 {filteredFornecedores.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                    {filteredFornecedores.map(f => (
+                    {applySorting(filteredFornecedores).map(f => (
                       <FornecedorCard
                         key={f.id}
                         fornecedor={f as Fornecedor}
@@ -209,7 +232,7 @@ export function Fornecedores() {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                  {data?.data.map(f => (
+                  {applySorting(data?.data ?? []).map(f => (
                     <FornecedorCard
                       key={f.id}
                       fornecedor={f}
