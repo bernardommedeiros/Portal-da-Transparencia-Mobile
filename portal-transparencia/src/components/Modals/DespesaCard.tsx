@@ -43,11 +43,21 @@ export function DespesaCard({ despesa, onEdit, onDelete, onViewDetail }: Despesa
       </CardContent>
 
       <CardFooter className="pt-3 pb-3 border-t dark:border-gray-700/50 flex justify-end gap-2 bg-gray-50/50 dark:bg-gray-900/20">
-        <Button variant="outline" size="sm" onClick={onEdit} className="h-8">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={(e) => { e.stopPropagation(); onEdit(); }} 
+          className="h-8"
+        >
           <Pencil className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300 pointer-events-none" />
           <span className="sr-only">Editar</span>
         </Button>
-        <Button variant="destructive" size="sm" onClick={onDelete} className="h-8 group">
+        <Button 
+          variant="destructive" 
+          size="sm" 
+          onClick={(e) => { e.stopPropagation(); onDelete(); }} 
+          className="h-8 group"
+        >
           <Trash2 className="w-3.5 h-3.5 pointer-events-none group-hover:block" />
           <span className="sr-only">Excluir</span>
         </Button>

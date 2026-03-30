@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@capacitor/camera": "^8.0.2",
+    "@capawesome/capacitor-file-picker": "^8.0.2"
+  }
+}

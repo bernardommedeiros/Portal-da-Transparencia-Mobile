@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/camera": "^8.0.2",
     "@capacitor/cli": "^8.3.0",
     "@capacitor/core": "^8.3.0",
     "@capacitor/ios": "^8.3.0",
+    "@capawesome/capacitor-file-picker": "^8.0.2",
     "@fontsource-variable/geist": "^5.2.8",
     "@heroicons/react": "^2.2.0",
     "axios": "^1.14.0",

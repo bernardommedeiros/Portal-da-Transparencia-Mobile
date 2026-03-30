@@ -45,5 +45,15 @@ export const despesasService = {
 
   deleteComprovante: async (id: number | string) => {
     await api.delete(`/despesas/${id}/comprovante`)
+  },
+
+  uploadComprovante: async (id: number | string, file: File | Blob) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    await api.post(`/despesas/${id}/comprovante`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }
