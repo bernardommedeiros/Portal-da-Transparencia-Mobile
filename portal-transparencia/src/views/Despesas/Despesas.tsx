@@ -4,6 +4,7 @@ import type { Despesa, PaginatedResponse, DespesaFilters } from '@/types/despesa
 import { DespesasFilter } from '../../components/Modals/DespesasFilter';
 import { DespesaCard } from '../../components/Modals/DespesaCard';
 import { DespesaFormModal } from '../../components/Modals/DespesaFormModal';
+import { DespesaDetailModal } from '../../components/Modals/DespesaDetailModal';
 import { ConfirmDeleteModal } from '../../components/Modals/ConfirmDeleteModal';
 import { Loader2, Plus, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,9 @@ export function Despesas() {
   
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [despesaToDelete, setDespesaToDelete] = useState<Despesa | null>(null)
+
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [despesaSelected, setDespesaSelected] = useState<Despesa | null>(null)
 
   const loadDespesas = useCallback(async () => {
     try {
@@ -53,6 +57,11 @@ export function Despesas() {
   const handleDeleteRequest = (despesa: Despesa) => {
     setDespesaToDelete(despesa)
     setIsDeleteOpen(true)
+  }
+
+  const handleViewDetail = (despesa: Despesa) => {
+    setDespesaSelected(despesa)
+    setIsDetailOpen(true)
   }
 
   const confirmDelete = async () => {
@@ -104,7 +113,8 @@ export function Despesas() {
                 key={desp.id} 
                 despesa={desp} 
                 onEdit={() => handleEdit(desp)} 
-                onDelete={() => handleDeleteRequest(desp)} 
+                onDelete={() => handleDeleteRequest(desp)}
+                onViewDetail={handleViewDetail}
               />
             ))}
             {data?.data.length === 0 && (
@@ -144,6 +154,18 @@ export function Despesas() {
         title="Excluir Despesa"
         description={`Tem certeza que deseja excluir a despesa "${despesaToDelete?.descricao}"?\nEsta ação não poderá ser desfeita.`}
       />
+
+      {isDetailOpen && despesaSelected && (
+        <DespesaDetailModal 
+          isOpen={isDetailOpen}
+          onClose={() => {
+            setIsDetailOpen(false)
+            setDespesaSelected(null)
+          }}
+          despesa={despesaSelected}
+          onDeleteSuccess={loadDespesas}
+        />
+      )}
     </div>
   )
 }

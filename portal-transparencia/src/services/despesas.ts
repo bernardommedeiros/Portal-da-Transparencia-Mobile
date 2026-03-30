@@ -29,5 +29,16 @@ export const despesasService = {
 
   delete: async (id: number | string) => {
     await api.delete(`/despesas/${id}`)
+  },
+
+  getComprovante: async (id: number | string) => {
+    const { data } = await api.get(`/despesas/${id}/comprovante`, {
+      responseType: 'blob'
+    })
+    return data
+  },
+
+  deleteComprovante: async (id: number | string) => {
+    await api.delete(`/despesas/${id}/comprovante`)
   }
 }

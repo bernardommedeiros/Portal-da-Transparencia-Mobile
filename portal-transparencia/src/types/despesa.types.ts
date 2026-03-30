@@ -63,6 +63,14 @@ export interface DespesaCardProps {
   despesa: Despesa;
   onEdit: () => void;
   onDelete: () => void;
+  onViewDetail: (despesa: Despesa) => void;
+}
+
+export interface DespesaDetailModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  despesa: Despesa;
+  onDeleteSuccess: () => void;
 }
 
 export interface DespesaFormModalProps {

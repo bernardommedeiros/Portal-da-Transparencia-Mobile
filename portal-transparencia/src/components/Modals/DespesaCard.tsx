@@ -4,11 +4,14 @@ import { Pencil, Trash2, Building2, User } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
 import type { DespesaCardProps } from '@/types/despesa.types';
 
-export function DespesaCard({ despesa, onEdit, onDelete }: DespesaCardProps) {
+export function DespesaCard({ despesa, onEdit, onDelete, onViewDetail }: DespesaCardProps) {
   const dateStr = new Date(despesa.created_at).toLocaleDateString('pt-BR')
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-shadow dark:hover:border-gray-600 bg-white dark:bg-gray-800">
+    <Card 
+      className="flex flex-col h-full hover:shadow-md transition-shadow dark:hover:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer group/card"
+      onClick={() => onViewDetail(despesa)}
+    >
       <CardHeader className="pb-3 border-b dark:border-gray-700/50">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base font-semibold leading-tight line-clamp-2" title={despesa.descricao}>
@@ -18,6 +21,9 @@ export function DespesaCard({ despesa, onEdit, onDelete }: DespesaCardProps) {
             {formatCurrency(despesa.valor)}
           </span>
         </div>
+        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold mt-1.5 uppercase tracking-wider">
+          REGISTRO: #{despesa.id.toString().padStart(4, '0')}
+        </p>
       </CardHeader>
       
       <CardContent className="pt-4 flex-1 space-y-3 pb-2 text-sm text-gray-600 dark:text-gray-300">
