@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
@@ -239,18 +240,14 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-xl min-w-[180px] p-2">
+                    <DropdownMenuLabel>Alterar comprovante</DropdownMenuLabel>
                       <DropdownMenuItem className="flex lg:hidden items-center gap-2 py-2.5 cursor-pointer rounded-lg" onClick={handleUploadCamera}>
                         <Camera className="w-4 h-4 text-blue-500" />
                         <span className="font-medium">Tirar Foto</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="flex lg:hidden items-center gap-2 py-2.5 cursor-pointer rounded-lg" onClick={handleUploadFile}>
-                        <ImageIcon className="w-4 h-4 text-purple-500" />
+                      <DropdownMenuItem className="lg:flex items-center gap-2 py-2.5 cursor-pointer rounded-lg" onClick={handleUploadFile}>
+                        <FileUp className="w-4 h-4 text-purple-500" />
                         <span className="font-medium">Escolher Arquivo</span>
-                      </DropdownMenuItem>
-
-                      <DropdownMenuItem className="hidden lg:flex items-center gap-2 py-2.5 cursor-pointer rounded-lg" onClick={handleUploadFile}>
-                        <FileUp className="w-4 h-4 text-blue-500" />
-                        <span className="font-medium">Alterar Comprovante</span>
                       </DropdownMenuItem>
 
                       <div className="h-px bg-gray-100 dark:bg-gray-800 my-1" />
