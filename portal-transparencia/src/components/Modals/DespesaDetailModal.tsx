@@ -22,7 +22,8 @@ import {
   AlertCircle,
   Camera,
   FileUp,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Download
 } from 'lucide-react'
 import { Camera as CapCamera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { FilePicker } from '@capawesome/capacitor-file-picker'
@@ -38,12 +39,14 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [previewUrl, setPreviewUrl] = useState('')
+  const [previewType, setPreviewType] = useState('')
   const [isUploading, setIsUploading] = useState(false)
 
   const validateFile = (file: File | Blob) => {
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) {
-      toast.error('O arquivo deve ter no máximo 5MB.')
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2)
+      toast.error(`O arquivo é muito grande (${sizeMB}MB). O limite permitido é 5MB.`)
       return false
     }
     return true
@@ -52,7 +55,8 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
   const handleUploadCamera = async () => {
     try {
       const image = await CapCamera.getPhoto({
-        quality: 90,
+        quality: 60,
+        width: 1600,
         allowEditing: false,
         resultType: CameraResultType.Uri,
         source: CameraSource.Camera
@@ -64,7 +68,6 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
         const blob = await response.blob()
         
         if (validateFile(blob)) {
-          // Criar um File a partir do Blob para o FormData
           const file = new File([blob], `comprovante_${Date.now()}.jpg`, { type: 'image/jpeg' })
           await despesasService.uploadComprovante(despesa.id, file)
           toast.success('Comprovante enviado com sucesso!')
@@ -74,8 +77,8 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
       }
     } catch (err: any) {
       if (!err.message?.includes('User cancelled')) {
-        console.error(err)
-        toast.error('Erro ao capturar foto.')
+        console.error('Camera Error:', err)
+        toast.error(`Erro ao capturar foto: ${err.message || 'Falha no acesso à câmera'}`)
       }
     } finally {
       setIsUploading(false)
@@ -139,13 +142,9 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
       const blob = await despesasService.getComprovante(despesa.id)
       const url = window.URL.createObjectURL(blob)
       
-      if (blob.type.startsWith('image/')) {
-        setPreviewUrl(url)
-        setIsPreviewOpen(true)
-      } else {
-        window.open(url, '_blank')
-        setTimeout(() => window.URL.revokeObjectURL(url), 60000)
-      }
+      setPreviewUrl(url)
+      setPreviewType(blob.type)
+      setIsPreviewOpen(true)
     } catch (err) {
       console.error(err)
       toast.error('Erro ao abrir o comprovante. Verifique se o arquivo existe.')
@@ -159,6 +158,7 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
       window.URL.revokeObjectURL(previewUrl)
     }
     setPreviewUrl('')
+    setPreviewType('')
     setIsPreviewOpen(false)
   }
 
@@ -324,19 +324,42 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
       />
 
       <Dialog open={isPreviewOpen} onOpenChange={(open) => !open && handleClosePreview()}>
-        <DialogContent className="max-w-[95vw] md:max-w-4xl p-0 border-none bg-black/95 shadow-2xl overflow-hidden sm:rounded-3xl">
-          <div className="relative flex items-center justify-center min-h-[40vh]">
-            <img 
-              src={previewUrl} 
-              alt="Comprovante" 
-              className="max-h-[80vh] w-auto h-auto object-contain select-none shadow-2xl"
-              onContextMenu={(e) => e.preventDefault()}
-            />
+        <DialogContent className="max-w-[95vw] md:max-w-4xl h-[90vh] p-0 border-none bg-black/95 shadow-2xl overflow-hidden sm:rounded-3xl flex flex-col">
+          <div className="relative flex-1 flex items-center justify-center min-h-[40vh] overflow-hidden bg-black/40">
+            {previewType === 'application/pdf' ? (
+              <iframe 
+                src={previewUrl} 
+                className="w-full h-full border-none bg-white"
+                title="Visualização do Comprovante"
+              />
+            ) : (
+              <img 
+                src={previewUrl} 
+                alt="Comprovante" 
+                className="max-h-full w-auto h-auto object-contain select-none shadow-2xl"
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            )}
           </div>
-          <div className="bg-white dark:bg-gray-950 border-t dark:border-gray-800 p-3 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <Button variant="outline" onClick={handleClosePreview} className="rounded-xl h-11 px-8 font-bold border-gray-200 dark:border-gray-800">
+          <div className="bg-white dark:bg-gray-950 border-t dark:border-gray-800 p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <Button 
+              variant="outline" 
+              onClick={handleClosePreview} 
+              className="w-full sm:w-auto rounded-xl h-12 px-8 font-bold border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+            >
               Fechar
             </Button>
+            
+            <a 
+              href={previewUrl} 
+              download={`comprovante_${despesa.id}.${previewType === 'application/pdf' ? 'pdf' : 'jpg'}`}
+              className="w-full sm:w-auto"
+            >
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-12 px-8 font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-500/20">
+                <Download className="w-4 h-4" />
+                Baixar Arquivo
+              </Button>
+            </a>
           </div>
         </DialogContent>
       </Dialog>
