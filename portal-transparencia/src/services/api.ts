@@ -23,12 +23,15 @@ api.interceptors.response.use(
         message = 'Não foi possível conectar ao servidor. Verifique sua internet.';
       }
     } else {
-      const data = error.response.data as { message?: string; error?: string } | undefined
-      const backendMessage = data?.message || data?.error
-      
-      const translatedMessage = typeof backendMessage === 'string' && ERROR_TRANSLATIONS[backendMessage]
-        ? ERROR_TRANSLATIONS[backendMessage]
-        : backendMessage;
+      const data = error.response.data as any;
+      let rawMessage = data?.message || data?.error || (typeof data === 'string' ? data : null);
+      if (!rawMessage && data?.errors) {
+        const firstErrorKey = Object.keys(data.errors)[0]
+        const firstError = data.errors[firstErrorKey]
+        rawMessage = Array.isArray(firstError) ? firstError[0] : firstError
+      }
+      const backendMessage = typeof rawMessage === 'string' ? rawMessage.trim() : null
+      const translatedMessage = backendMessage && ERROR_TRANSLATIONS[backendMessage] ? ERROR_TRANSLATIONS[backendMessage] : backendMessage
 
       const defaultMessages: Record<number, string> = {
         400: 'Dados inválidos. Verifique as informações enviadas.',
@@ -37,7 +40,7 @@ api.interceptors.response.use(
         404: 'A informação solicitada não foi encontrada.',
         409: 'Este registro já existe no sistema.',
         413: 'O arquivo é grande demais para ser enviado.',
-        422: 'Não foi possível completar o cadastro. Verifique se as informações já existem.',
+        422: 'Não foi possível completar a ação. Verifique os dados enviados.',
         500: 'O servidor está instável. Tente novamente em alguns instantes.',
         504: 'O servidor está instável. Tente novamente mais tarde.',
       }

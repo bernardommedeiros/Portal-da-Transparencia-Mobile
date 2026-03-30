@@ -55,8 +55,8 @@ export function DespesaDetailModal({ isOpen, onClose, despesa, onDeleteSuccess }
   const handleUploadCamera = async () => {
     try {
       const image = await CapCamera.getPhoto({
-        quality: 60,
-        width: 1600,
+        quality: 50,
+        width: 1200,
         allowEditing: false,
         resultType: CameraResultType.Uri,
         source: CameraSource.Camera
