@@ -151,57 +151,42 @@ export function Fornecedores() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-950 pb-24 sm:pb-8">
-      <div className="px-3 py-4 sm:px-6 sm:py-6 md:px-8 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto space-y-3">
-
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Fornecedores</h1>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Gerenciamento de fornecedores cadastrados</p>
-            </div>
-            <Button
-              onClick={() => { setFornecedorToEdit(null); setIsFormOpen(true) }}
-              className="hidden sm:flex h-11 rounded-xl px-6"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Cadastrar Fornecedor
-            </Button>
-          </div>
-
-          <form onSubmit={e => e.preventDefault()} className="relative group w-full">
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-            </div>
-            <Input
-              value={searchQuery}
-              onChange={e => handleSearchChange(e.target.value)}
-              placeholder="Buscar por nome, documento ou ID..."
-              className="pl-10 h-11 rounded-xl bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 focus-visible:ring-indigo-500 w-full"
-            />
-          </form>
-
-          <Button
-            onClick={() => { setFornecedorToEdit(null); setIsFormOpen(true) }}
-            className="sm:hidden w-full h-11 rounded-xl"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Cadastrar Fornecedor
-          </Button>
+    <div className="p-4 md:p-6 space-y-4 max-w-7xl mx-auto w-full pb-20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Fornecedores</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Gerenciamento de fornecedores cadastrados</p>
         </div>
+        <Button
+          onClick={() => { setFornecedorToEdit(null); setIsFormOpen(true) }}
+          className="h-10 sm:h-11 rounded-xl px-4 sm:px-6 w-full sm:w-auto"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          Cadastrar Fornecedor
+        </Button>
       </div>
 
-      <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
-        <div className="flex items-center justify-end mb-4">
-          <SortSelector options={FORNECEDOR_SORT_OPTIONS} value={sortBy} onChange={setSortBy} />
+      <form onSubmit={e => e.preventDefault()} className="relative group w-full">
+        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
         </div>
+        <Input
+          value={searchQuery}
+          onChange={e => handleSearchChange(e.target.value)}
+          placeholder="Buscar por nome, documento ou ID..."
+          className="pl-10 h-11 rounded-xl bg-white dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 focus-visible:ring-indigo-500 w-full shadow-sm"
+        />
+      </form>
+
+      <div className="flex items-center justify-end">
+        <SortSelector options={FORNECEDOR_SORT_OPTIONS} value={sortBy} onChange={setSortBy} />
+      </div>
         {error && (
           <div className="mb-6 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 p-4 rounded-2xl flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0" />
             <p className="text-sm font-medium">{error}</p>
           </div>
         )}
-
         {loading ? (
           <div className="flex flex-col items-center justify-center p-20 space-y-4">
             <Loader2 className="h-10 w-10 animate-spin text-indigo-500" />
@@ -259,7 +244,6 @@ export function Fornecedores() {
             )}
           </div>
         )}
-      </div>
 
       <FornecedorFormModal
         isOpen={isFormOpen}
