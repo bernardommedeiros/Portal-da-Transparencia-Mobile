@@ -15,7 +15,6 @@ import type { Fornecedor } from '@/types/fornecedor.types'
 import { despesasService } from '@/services/despesas'
 import type { Despesa, PaginatedResponse } from '@/types/despesa.types'
 import { PaginationBar } from '@/components/ui/PaginationBar'
-import { DespesaCard } from './DespesaCard'
 
 interface FornecedorDetailModalProps {
   isOpen: boolean
@@ -27,7 +26,6 @@ export function FornecedorDetailModal({ isOpen, onClose, fornecedor }: Fornecedo
   const [despesasData, setDespesasData] = useState<PaginatedResponse<Despesa> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
 
   const fetchDespesas = useCallback(async (currentPage: number) => {
     try {
@@ -39,7 +37,7 @@ export function FornecedorDetailModal({ isOpen, onClose, fornecedor }: Fornecedo
         per_page: 5
       })
       setDespesasData(res)
-    } catch (err: unknown) {
+    } catch {
       setError('Falha ao carregar as despesas vinculadas.')
     } finally {
       setLoading(false)
@@ -48,7 +46,6 @@ export function FornecedorDetailModal({ isOpen, onClose, fornecedor }: Fornecedo
 
   useEffect(() => {
     if (isOpen) {
-      setPage(1)
       fetchDespesas(1)
     }
   }, [isOpen, fetchDespesas])
@@ -60,7 +57,6 @@ export function FornecedorDetailModal({ isOpen, onClose, fornecedor }: Fornecedo
   }) : 'Data não disponível'
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
     fetchDespesas(newPage)
   }
 
