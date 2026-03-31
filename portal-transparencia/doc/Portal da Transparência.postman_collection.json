@@ -22,11 +22,12 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/despesas/total/orgao",
+              "raw": "{{baseUrl}}/api/despesas/total/orgao",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "despesas",
                 "total",
                 "orgao"
@@ -47,11 +48,12 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/despesas/total/fornecedor",
+              "raw": "{{baseUrl}}/api/despesas/total/fornecedor",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "despesas",
                 "total",
                 "fornecedor"
@@ -77,11 +79,12 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/orgaos",
+              "raw": "{{baseUrl}}/api/orgaos",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos"
               ]
             }
@@ -100,24 +103,23 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/orgaos/paginado?per_page=10&page=1",
+              "raw": "{{baseUrl}}/api/orgaos/paginado?per_page=10&page=1",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos",
                 "paginado"
               ],
               "query": [
                 {
                   "key": "per_page",
-                  "value": "10",
-                  "type": "text"
+                  "value": "10"
                 },
                 {
                   "key": "page",
-                  "value": "1",
-                  "type": "text"
+                  "value": "1"
                 }
               ]
             }
@@ -136,11 +138,12 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/orgaos/{{id}}",
+              "raw": "{{baseUrl}}/api/orgaos/{{id}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos",
                 "{{id}}"
               ]
@@ -161,7 +164,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"Teste 2 Bernardo\"\r\n}",
+              "raw": "{\r\n    \"name\": \"Teste Dash 2\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -169,11 +172,12 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orgaos",
+              "raw": "{{baseUrl}}/api/orgaos",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos"
               ]
             }
@@ -201,13 +205,14 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orgaos/9",
+              "raw": "{{baseUrl}}/api/orgaos/{{id}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos",
-                "9"
+                "{{id}}"
               ]
             }
           },
@@ -225,11 +230,12 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/orgaos/{{id}}",
+              "raw": "{{baseUrl}}/api/orgaos/{{id}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
+                "api",
                 "orgaos",
                 "{{id}}"
               ]
@@ -339,7 +345,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"Teste 2 Bernardo\",\r\n    \"document\": \"0221291\"\r\n}",
+              "raw": "{\r\n    \"name\": \" LTDA\",\r\n    \"document\": \"88888323219\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -528,7 +534,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"orgao_id\": \"4\",\r\n    \"fornecedor_id\": \"2\",\r\n    \"descricao\": \"TESTE\",\r\n    \"valor\": \"1.500\"\r\n}",
+              "raw": "{\r\n    \"orgao_id\": \"11\",\r\n    \"fornecedor_id\": \"12\",\r\n    \"descricao\": \"Despesa dashboard test\",\r\n    \"valor\": \"15000\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -707,34 +713,6 @@
           "response": []
         }
       ]
-    },
-    {
-      "name": "Base URL",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "X-API-Key",
-            "value": "{{apiToken}}",
-            "type": "text"
-          }
-        ],
-        "url": {
-          "raw": "https://avaliacaoapi.ext.topsolutionsrn.com.br/api",
-          "protocol": "https",
-          "host": [
-            "avaliacaoapi",
-            "ext",
-            "topsolutionsrn",
-            "com",
-            "br"
-          ],
-          "path": [
-            "api"
-          ]
-        }
-      },
-      "response": []
     }
   ]
 }
