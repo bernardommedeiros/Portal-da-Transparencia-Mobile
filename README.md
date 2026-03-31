@@ -1,160 +1,155 @@
-# Avaliação Mobile — React + Capacitor
+<div align="center">
 
-Olá! bem-vindo(a) à avaliação técnica para integrar a equipe de desenvolvimento da Top Solutions.
+# Portal da Transparência Mobile
 
-## Objetivo
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Capacitor](https://img.shields.io/badge/Capacitor-8-119EFF?logo=capacitor&logoColor=white)](https://capacitorjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 
-O desafio consiste em desenvolver um aplicativo mobile administrativo de **Portal da Transparência**, consumindo uma API REST já disponibilizada pela empresa. O app deve permitir que o usuário consulte gastos públicos — quais órgãos gastaram, com quais fornecedores e os comprovantes de cada despesa. 
+**Uma solução moderna e administrativa para consulta e fiscalização de gastos públicos.**
 
-Deve ser feito um fork desse respositório na sua conta do Github e o projeto deve ser inteiramente desenvolvido por lá. Ao finalizar, envie o link do seu repositório público para avaliação.
 
-A API está disponível em: `https://avaliacaoapi.ext.topsolutionsrn.com.br/api`
+</div>
 
-A autenticação é feita via header `X-API-Key`. A chave será fornecida junto com este enunciado.
+---
 
-## Requisitos Funcionais
+## Visão Geral
 
-### 1. Dashboard
+O **Portal da Transparência Mobile** é um aplicativo administrativo robusto projetado para oferecer transparência e controle sobre a gestão financeira pública. Construído com tecnologias de ponta, permite auditar despesas, gerenciar entidades e anexar comprovantes fiscais diretamente de dispositivos móveis.
 
-Tela inicial exibindo um resumo financeiro:
+## Funcionalidades Principais
 
-- Total de gastos agrupados por órgão (`GET /api/despesas/total/orgao`)
-- Total de gastos agrupados por fornecedor (`GET /api/despesas/total/fornecedor`)
+| Módulo | Descrição |
+| :--- | :--- |
+| **Dashboard Analítico** | Resumo financeiro com gráficos de rosca e barras (Recharts), agrupando gastos por órgão e fornecedor via endpoints de agregação. |
+| **Gestão de Despesas** | CRUD completo com listagem, filtros combinados (órgão, fornecedor, faixa de preço), criação, edição e exclusão com confirmação. |
+| **Órgãos e Fornecedores** | Gestão de entidades com suporte a listagem paginada e validação de documentos (CPF/CNPJ) para fornecedores. |
+| **Gestão de Comprovantes** | Integração nativa para upload de arquivos (PDF/Imagem) vinculados a despesas via câmera ou galeria. |
+| **Visualização Detalhada** | Interface dedicada para conferência minuciosa de dados e acesso rápido a anexos e comprovantes. |
 
-### 2. Despesas
+## Funcionalidades secundárias/extras
 
-Tela que exibe todas as despesas cadastradas com as seguintes funcionalidades:
+- **UI/UX**: Suporte nativo a **Dark Mode**, sistema de **Skeleton Loading** para uma experiência fluida em redes lentas e design **Mobile First**.
+- **Feedback em Tempo Real**: Notificações via **Toasts** para confirmação de operações e tratamento de erros.
+- **Poder Nativo**: Integração profunda com hardware via Capacitor para uso de Câmera e Seletor de Arquivos.
+- **Filtros Dinâmicos**: Sistema inteligente de busca e limpeza de filtros ativos para navegação otimizada na aba de despesas.
+- **Barra de Busca**: Barra de busca inteligente que permite buscar por nome, id de registro e documento nas abas de fornecedores e orgãos.
+- **Ordenação**: O aplicativo conta com um sistema de ordenação dinâmico em todas as listagens (A-Z/Z-A, maior/menor valor, mais recente/antigo).
+- **Tratamento de erros e comunicacao com o usuario**: O aplicativo conta com um sistema de tratamento de erros e comunicacao clara com o usuario, exibindo mensagens claras e objetivas para o usuario via **Toasts** ou páginas como em caso de **404**.
 
-- Listagem com descrição, valor, órgão e fornecedor de cada item
-- Filtros funcionais: `orgao_id`, `fornecedor_id`, `valor_min`, `valor_max`
-- Cadastro de nova despesa (órgão, fornecedor, descrição, valor)
-- Edição de despesa existente
-- Exclusão de despesa (com confirmação)
+---
 
-### 3. Detalhe de Despesa
+## Stack
 
-Tela que exibe todos os campos de uma despesa. Quando houver comprovante vinculado, deve oferecer opção para visualizá-lo ou abri-lo.
+### Core & Frontend
+- **React 19**: Biblioteca base para a construção de interfaces reativas e performáticas.
+- **TypeScript**: Tipagem rigorosa de todos os contratos da API, eliminando o uso de `any` e garantindo segurança.
+- **Vite**: Build tool de última geração para um ciclo de desenvolvimento ultra-rápido.
 
-### 4. Órgãos
+### Mobile Native
+- **Capacitor 8**: Engine cross-platform para execução de código Web em ambiente nativo Android.
+- **Native Plugins**: Uso estratégico de `@capacitor/camera`, `@capawesome/capacitor-file-picker` e `Toast`.
 
-- Listagem de todos os órgãos cadastrados
-- Cadastro de novo órgão
-- Edição de órgão existente
-- Exclusão de órgão (com confirmação)
+### UI & Styling
+- **Tailwind CSS 4**: Estilização utilitária de alta performance e customização total.
+- **Shadcn/UI**: Componentes acessíveis, modernos e seguindo as melhores práticas de UX.
+- **Lucide React**: Biblioteca de ícones leves e consistentes.
 
-### 5. Fornecedores
+### Data & Networking
+- **Axios**: Cliente HTTP robusto com interceptors para injeção automática de `X-API-Key`.
+- **Recharts**: Visualização de dados financeiros complexos de forma intuitiva e interativa.
 
-- Listagem de todos os fornecedores cadastrados
-- Cadastro de novo fornecedor (nome e CNPJ/CPF)
-- Edição de fornecedor existente
-- Exclusão de fornecedor (com confirmação)
+---
 
-## Requisitos Técnicos
+## ⚙️ Instalação e Configuração
 
-- O projeto deve ser feito em **React + Capacitor**.
-- Utilize **Vite** e **TypeScript**.
-- O app deve rodar em **emulador ou dispositivo físico** — não apenas no navegador.
-- As respostas da API devem ser **tipadas com TypeScript** (evite `any`).
-- Organize o projeto com separação clara entre componentes e camada de serviços/API.
-- Armazene a `X-API-Key` em variável de ambiente (`.env`) — não a commite hardcoded.
+### Pré-requisitos
+- **Node.js** (v18 ou superior)
+- **Android Studio** (para emulação Android)
 
-### Sobre a API
-
-Todas as requisições devem incluir o header:
-
-```
-X-API-Key: <chave-fornecida-pelo-recrutador>
-```
-
-Sem o header ou com valor inválido, a API retorna `HTTP 401`.
-
-Endpoints disponíveis:
-
-**Órgãos**
-
-- `GET /api/orgaos` — lista todos os órgãos
-- `GET /api/orgaos/paginado` — lista órgãos paginada (query params: `page`, `per_page`)
-- `GET /api/orgaos/{id}` — detalhe de um órgão
-- `POST /api/orgaos` — cria um órgão (body: `name`)
-- `PUT /api/orgaos/{id}` — atualiza um órgão (body: `name`)
-- `DELETE /api/orgaos/{id}` — remove um órgão
-
-**Fornecedores**
-
-- `GET /api/fornecedores` — lista todos os fornecedores
-- `GET /api/fornecedores/paginado` — lista fornecedores paginada (query params: `page`, `per_page`)
-- `GET /api/fornecedores/{id}` — detalhe de um fornecedor
-- `POST /api/fornecedores` — cria um fornecedor (body: `name`, `document`)
-- `PUT /api/fornecedores/{id}` — atualiza um fornecedor (body: `name`, `document`)
-- `DELETE /api/fornecedores/{id}` — remove um fornecedor
-
-**Despesas**
-
-- `GET /api/despesas` — lista despesas (query params opcionais: `orgao_id`, `fornecedor_id`, `valor_min`, `valor_max`)
-- `GET /api/despesas/paginado` — lista despesas paginada (query params: `page`, `per_page`, `orgao_id`, `fornecedor_id`, `valor_min`, `valor_max`)
-- `GET /api/despesas/{id}` — detalhe de uma despesa (inclui `comprovante_url` quando houver)
-- `POST /api/despesas` — cria uma despesa (body: `orgao_id`, `fornecedor_id`, `descricao`, `valor`)
-- `PUT /api/despesas/{id}` — atualiza uma despesa (body: `orgao_id`, `fornecedor_id`, `descricao`, `valor`)
-- `DELETE /api/despesas/{id}` — remove uma despesa
-- `GET /api/despesas/total/orgao` — total de gastos agrupado por órgão
-- `GET /api/despesas/total/fornecedor` — total de gastos agrupado por fornecedor
-
-> **Rotas paginadas** retornam um envelope com os campos: `data` (itens da página), `current_page`, `last_page`, `per_page`, `total`, `from`, `to` e `links` (`first`, `last`, `prev`, `next`). O parâmetro `per_page` aceita valores entre 1 e 100 (padrão: 15).
-
-**Comprovantes**
-
-- `POST /api/despesas/{id}/comprovante` — upload de comprovante (multipart/form-data, campo `file`, formatos: jpeg, png, pdf, máx. 5 MB)
-- `GET /api/despesas/{id}/comprovante` — baixar/visualizar comprovante
-- `DELETE /api/despesas/{id}/comprovante` — remove o comprovante
-
-### Setup do Projeto
-
-OBS: Você vai precisar do Android Studio
-
+### 1. Preparação do Ambiente
 ```bash
-npm create vite@latest portal-transparencia -- --template react-ts
+# Navegue até o diretório do projeto
 cd portal-transparencia
-npm install
-npm install @capacitor/core @capacitor/cli
-npx cap init
-npm install @capacitor/android   # ou @capacitor/ios
-npx cap add android              # ou ios
-npm run build && npx cap sync
-npx cap run android              # ou ios
+
+# Instale as dependências com NPM
+npm i
 ```
 
-Crie um arquivo `.env` com:
-
-```
+### 2. Variáveis de Ambiente
+Crie um arquivo `.env` baseado no `.env.example`:
+```env
 VITE_API_URL=https://avaliacaoapi.ext.topsolutionsrn.com.br/api
-VITE_API_KEY=sua-chave-aqui
+VITE_API_KEY=chave-de-api
 ```
 
-## Funcionalidades Gerais
+---
 
-- O app deve rodar corretamente em emulador ou dispositivo físico, não apenas no navegador.
-- As telas de listagem devem exibir estado de carregamento enquanto os dados são buscados.
-- Erros de requisição devem ser comunicados ao usuário de forma clara.
-- O layout deve ser responsivo e adequado para uso mobile.
+## 📱 Emulação no Android Studio
 
-## Bônus
+### Passo 1: Configuração Nativa
+1. Abra o **Android Studio**.
+2. Selecione **Open** e aponte para a pasta `/portal-transparencia/android`.
+3. Aguarde a sincronização total do Gradle.
 
-Essa etapa é opcional e serve como diferencial. Não é obrigatório realizar os itens abaixo:
+### Passo 2: Dispositivo Virtual (AVD)
+1. Acesse **Tools** > **Device Manager**.
+2. Crie um novo dispositivo (ex: **Pixel 2**).
+3. Utilize uma imagem de sistema com **API 34** ou superior.
 
-- Upload de comprovante utilizando Capacitor Camera ou FilePicker.
-- Pull-to-refresh nas listagens.
-- Skeleton loading nos estados de carregamento.
-- Tema escuro.
-- Paginação ou scroll infinito nas listagens.
-- Tratamento de erros com toasts ou snackbars.
-- Ordenação das listagens por diferentes critérios (ex: despesas por valor ou data, fornecedores por nome).
-- Filtros combinados na tela de despesas: por órgão, fornecedor, intervalo de valor — com opção de limpar filtros ativos.
+### Passo 3: Execução
+```bash
+# Build da aplicação Web
+npm run build
 
-## Instruções Finais
+# Sincronização Capacitor
+npx cap sync
 
-- O projeto deve ser feito em **React + Capacitor**, conforme indicado no enunciado.
-- Utilize o repositório disponibilizado pela empresa no GitHub.
-- Inclua no README do seu projeto: como rodar, em qual emulador/device foi testado e a API Key usada nos testes.
-- Prazo: O prazo para entrega do desafio é de **7 dias** após o recebimento deste enunciado.
+# Deploy para o emulador
+npx cap run android
+```
 
-Boa sorte e bom desenvolvimento!
+Segue vídeo do projeto rodando no emulador e validando funcionalidades: https://drive.google.com/file/d/1955r714l84633121212121212121212/view?usp=sharing
+
+---
+
+## 🌐 Acessos públicos
+
+### Dominio na Web
+- https://portal-da-transparencia-mobile.vercel.app/dashboard
+
+### APK android para testes
+
+
+---
+
+## 💻 Execução Local na Web
+
+### Passo 1: Inicialização do Servidor
+1. Abra o terminal.
+2. Navegue até a pasta `/portal-transparencia`.
+3. Execute o comando `npm run dev`.
+
+### Passo 2: Acessa aplicação
+1. Abra o navegador de sua preferência.
+2. Acesse o endereço `http://localhost:5173`.
+
+---
+
+## 📂 Arquitetura do Projeto
+
+| Diretório | Responsabilidade |
+| :--- | :--- |
+| `src/services` | Camada de rede, interceptors Axios e contratos de API. |
+| `src/components` | Componentes de UI desenvolvidos por mim e nativos da lib Shadcn/UI. |
+| `src/views` | Organização das telas principais e fluxo de navegação. |
+| `src/types` | Centralização de interfaces, props e tipos globais TypeScript. |
+
+---
+
+## Criador
+
+**Bernardo Medeiros**
+_*Este projeto é o resultado da avaliação técnica para a equipe de desenvolvimento da **Top Solutions**.*_
