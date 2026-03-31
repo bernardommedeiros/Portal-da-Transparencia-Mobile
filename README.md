@@ -25,9 +25,9 @@ O **Portal da Transparência Mobile** é um aplicativo administrativo robusto pr
 | :--- | :--- |
 | **Dashboard Analítico** | Resumo financeiro com gráficos de rosca e barras (Recharts), agrupando gastos por órgão e fornecedor via endpoints de agregação. |
 | **Gestão de Despesas** | CRUD completo com listagem, filtros combinados (órgão, fornecedor, faixa de preço), criação, edição e exclusão com confirmação. |
-| **Órgãos e Fornecedores** | Gestão de entidades com suporte a listagem paginada e validação de documentos (CPF/CNPJ) para fornecedores. |
-| **Gestão de Comprovantes** | Integração nativa para upload de arquivos (PDF/Imagem) vinculados a despesas via câmera ou galeria. |
-| **Visualização Detalhada** | Interface dedicada para conferência minuciosa de dados e acesso rápido a anexos e comprovantes. |
+| **Órgãos e Fornecedores** | Gestão de entidades com suporte a listagem paginada. |
+| **Gestão de Comprovantes** | Integração nativa para upload de arquivos (PDF/Imagem) vinculados a despesas via câmera, galeria e/ou arquivos. |
+| **Visualização Detalhada** | Interface dedicada para conferência minuciosa de dados e acesso rápido a anexos e comprovantes de cada despesa. |
 
 ## Funcionalidades secundárias/extras
 
@@ -176,6 +176,6 @@ npx cap run android
 
 ---
 
-## Criador
+## 👨‍💻 Criador
 
 **Bernardo Medeiros**
